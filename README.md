@@ -4,6 +4,9 @@ This module provides a resource that will manage the installation of gitolite
 for a defined user, admin key and repository path. In this way multiple
 repository types may be managed.
 
+Other resources are available. Please consult the contents of
+`manifests/resource` for more details.
+
 ## Quick Use
 
 In a node definition:
