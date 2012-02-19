@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# A hook script for the "post-receive" event.
+#
+# The "post-receive" script is run after receive-pack has accepted a pack
+# and the repository has been updated.  It is passed arguments in through
+# stdin in the form
+#  <oldrev> <newrev> <refname>
+# For example:
+#  aa453216d1b3e49e7f6f98441fa56946ddcd6a20 68f7abf4e6f922807889f52bc043ecd31b79f814 refs/heads/master
+#
+# Specifically, this hook will send an AMQP message through /usr/bin/hare of the
+# form git.PROJECT.REFNAME with payload "<oldrev> <newrev> <refname>" over the
+# traut vhost.
+
+read oldrev newrev refname
+branchname=`echo $refname | awk -F '/' '{ print $3 }'`
+
+/usr/bin/hare --port <%= mqport %> --host <%= mqhost %> --username traut \
+    --password "<%= mqpass %>" --vhost "/traut" --exchange_name traut \
+    --route_key "git.<%= title %>.$branchname" --ssl_cert <%= mqcert %> \
+    --ssl_key <%= mqkey %> --producer "$title $oldrev $newrev $refname"
