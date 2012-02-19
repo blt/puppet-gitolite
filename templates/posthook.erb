@@ -16,7 +16,7 @@
 read oldrev newrev refname
 branchname=`echo $refname | awk -F '/' '{ print $3 }'`
 
-/usr/bin/hare --port <%= mqport %> --host <%= mqhost %> --username traut \
+/usr/bin/hare --port <%= mqport %> --host <%= mqhost %> --username <%= mquser %> \
     --password "<%= mqpass %>" --vhost "/traut" --exchange_name traut \
     --route_key "git.<%= title %>.$branchname" --ssl_cert <%= mqcert %> \
     --ssl_key <%= mqkey %> --producer "$title $oldrev $newrev $refname"
